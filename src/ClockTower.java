@@ -188,7 +188,7 @@ public class ClockTower implements LineListener {
             getMinutes = calendar.get(Calendar.MINUTE);
             getSeconds = calendar.get(Calendar.SECOND);
             //getMinutes = 0;
-            //getSeconds = 20;
+            //getSeconds = 0;
             //isplayed = true;
             ClockTower tower = new ClockTower();
 
@@ -215,11 +215,14 @@ public class ClockTower implements LineListener {
                 }
             }
             if(isplayed){
-                if (getSeconds == 20){
-                    tower.playChime(getHours);
-                    //tower.wait(5);
-                    isplayed = false;
-                }
+                    if (getSeconds == 1) {
+                        if(getHours == 0){
+                            getHours = 12;
+                        }
+                        tower.playChime(getHours);
+                        //tower.wait(5);
+                        isplayed = false;
+                    }
             }
 
             try {
