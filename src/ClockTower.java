@@ -44,7 +44,7 @@ public class ClockTower implements LineListener {
             ex.printStackTrace();
         }
     }
-    public void playChime(){
+    public void playChime(int hours){
         File chimeFile = new File(chime);
 
         try {
@@ -55,6 +55,7 @@ public class ClockTower implements LineListener {
             audioChime.addLineListener(this);
             audioChime.open(inChime);
             audioChime.start();
+            audioChime.loop(hours);
             while (!finishedPlaying) {
                 try {
                     Thread.sleep(1000);
@@ -187,7 +188,8 @@ public class ClockTower implements LineListener {
             getMinutes = calendar.get(Calendar.MINUTE);
             getSeconds = calendar.get(Calendar.SECOND);
             //getMinutes = 0;
-            //getSeconds = 0;
+            //getSeconds = 20;
+            //isplayed = true;
             ClockTower tower = new ClockTower();
 
             if(getMinutes == 0){
@@ -214,7 +216,8 @@ public class ClockTower implements LineListener {
             }
             if(isplayed){
                 if (getSeconds == 20){
-                    tower.playChime();
+                    tower.playChime(getHours);
+                    //tower.wait(5);
                     isplayed = false;
                 }
             }
