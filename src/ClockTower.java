@@ -1,11 +1,17 @@
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import javax.sound.sampled.*;
+import javax.swing.*;
 import java.io.*;
 
 
-public class ClockTower implements LineListener {
+public class ClockTower extends JFrame implements LineListener {
     String hour = "westminster-top-hour-chime.wav";
     String quarterHour = "westminster-quarter-hour-chime.wav";
     String thirdQuarter = "westminster-third-quarter-chime.wav";
@@ -14,6 +20,24 @@ public class ClockTower implements LineListener {
 //TODO: Rewrite playsounds to include 5 different play sounds
 
     public boolean finishedPlaying;
+
+    public ClockTower(){
+        final JLabel timeLabel = new JLabel();
+        add(timeLabel);
+
+        final DateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+        ActionListener timerListener = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Date date = new Date();
+                String time = timeFormat.format(date);
+                timeLabel.setText(time);
+            }
+
+        };
+        Timer timer = new Timer(1000, timerListener);
+        timer.setInitialDelay(0);
+        timer.start();
+    }
 
     public void playHour() {
         File hourFile = new File(hour);
@@ -55,7 +79,7 @@ public class ClockTower implements LineListener {
             audioChime.addLineListener(this);
             audioChime.open(inChime);
             audioChime.start();
-            audioChime.loop(hours);
+            audioChime.loop(hours - 1);
             while (!finishedPlaying) {
                 try {
                     Thread.sleep(1000);
@@ -178,6 +202,11 @@ public class ClockTower implements LineListener {
 
     public static void main(String[] args) throws Exception {
         boolean isplayed = false;
+        JFrame frame = new ClockTower();
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.pack();
+        frame.setVisible(true);
+
         while (true) {
             int getMinutes;
             int getHours;
@@ -188,7 +217,7 @@ public class ClockTower implements LineListener {
             getMinutes = calendar.get(Calendar.MINUTE);
             getSeconds = calendar.get(Calendar.SECOND);
             //getMinutes = 0;
-            //getSeconds = 0;
+            //getSeconds = 1;
             //isplayed = true;
             ClockTower tower = new ClockTower();
 
