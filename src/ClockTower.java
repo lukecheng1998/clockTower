@@ -9,6 +9,7 @@ import java.util.concurrent.TimeUnit;
 import javax.sound.sampled.*;
 import javax.swing.*;
 import java.io.*;
+import javax.swing.BorderFactory;
 
 
 public class ClockTower extends JFrame implements LineListener {
@@ -17,27 +18,42 @@ public class ClockTower extends JFrame implements LineListener {
     String thirdQuarter = "westminster-third-quarter-chime.wav";
     String halfHour = "westminster-half-chime.wav";
     String chime = "hour-chimes.wav";
+    private JFrame frame;
+    private JLabel label;
+    private Display clockDisplay;
+    private boolean run = false;
+    private TimerThread timerThread;
 //TODO: Rewrite playsounds to include 5 different play sounds
 
     public boolean finishedPlaying;
 
     public ClockTower(){
-        final JLabel timeLabel = new JLabel();
-        add(timeLabel);
-
-        final DateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
-        ActionListener timerListener = new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                Date date = new Date();
-                String time = timeFormat.format(date);
-                timeLabel.setText(time);
-            }
-
-        };
-        Timer timer = new Timer(1000, timerListener);
-        timer.setInitialDelay(0);
-        timer.start();
+        clockDisplay = new Display();
     }
+
+    private void start(){
+        run = true;
+        timerThread = new TimerThread();
+        //Get Timerthread to start
+    }
+    private void stop(){
+        run = false;
+    }
+    private void step(){
+        clockDisplay.TickTime();
+        label.setText(clockDisplay.getTime());
+    }
+    private void showAbout(){
+        JOptionPane.showMessageDialog (frame,
+                "Clock Version 1.0\n" +
+                        "Showing a grandfather clock and playing sounds",
+                "Clock",
+                JOptionPane.INFORMATION_MESSAGE);
+    }
+    private void quit(){
+        System.exit(0);
+    }
+    
 
     public void playHour() {
         File hourFile = new File(hour);
@@ -199,7 +215,9 @@ public class ClockTower extends JFrame implements LineListener {
             finishedPlaying = true;
         }
     }
+    class TimerThread {
 
+    }
     public static void main(String[] args) throws Exception {
         boolean isplayed = false;
         JFrame frame = new ClockTower();
